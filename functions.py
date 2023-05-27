@@ -3,11 +3,16 @@ import openai
 import os
 from docx import Document
 import datetime as dt
-from dotenv import load_dotenv
 
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+except:
+    import toml
+    config = toml.load("config.toml")
+    openai.api_key = config["API_KEY"]
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def create_docx(dicc, school_name, teacher_name, subject):
     """
