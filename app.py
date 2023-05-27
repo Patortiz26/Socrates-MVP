@@ -1,4 +1,3 @@
-!pip install requirements.txt
 import streamlit as st
 import pandas as pd
 from functions import *
