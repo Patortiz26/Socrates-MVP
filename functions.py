@@ -4,10 +4,9 @@ import os
 from docx import Document
 import datetime as dt
 from dotenv import load_dotenv
-    
-load_dotenv()
+import streamlit as st 
 
-openai.api_key = os.environ.get('OPENAI_API_KEY')
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 def create_docx(dicc, school_name, teacher_name, subject):
     """
