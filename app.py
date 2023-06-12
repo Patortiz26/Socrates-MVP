@@ -13,8 +13,26 @@ st.write("Autor : Patricio Ortiz - \nEmail de contacto: [patricio.ortiz.v@ug.uch
 # Entrada del usuario
 st.subheader("Información del Usuario")
 name = st.text_input("Nombre del Profesor")
-school = st.text_input("Institución educativa")
-course = st.selectbox("Curso \n\n Modulo en desarrollo, favor sólo elegir una de las opciones indicadas", ['', 'primaria', 'secundaria'])
+school = st.text_input("Institución Educativa")
+# Grade mapping
+grades = {
+    "":0,
+    "1° básico": 1,
+    "2° básico": 2,
+    "3° básico": 3,
+    "4° básico": 4,
+    "5° básico": 5,
+    "6° básico": 6,
+    "7° básico": 7,
+    "8° básico": 8,
+    "1° medio": 9,
+    "2° medio": 10,
+    "3° medio": 11,
+    "4° medio": 12,
+}
+
+course_label = st.selectbox("Curso", list(grades.keys()))
+course = grades[course_label]
 subject = st.text_input("Asignatura \n\nModulo en desarrollo, favor escribir asignatura en inglés.")
 
 # Subida de archivo
