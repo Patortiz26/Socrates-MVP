@@ -52,7 +52,7 @@ if uploaded_file:
     # Botón de subida de archivo
     
     if st.button('Generar Guía'):
-        generate_guide(uploaded_file, course, subject, name, school)
+        generate_guide(uploaded_file, course_label, subject_label, name, school)
         st.markdown("### Descargar Guía Generada")
         with open('guide.docx', 'rb') as docx_file:
             st.download_button('Descargar', data=docx_file, file_name='guide.docx')
