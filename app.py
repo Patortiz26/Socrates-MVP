@@ -15,7 +15,7 @@ st.subheader("Información del Usuario")
 name = st.text_input("Nombre del Profesor")
 school = st.text_input("Institución Educativa")
 # Grade mapping
-grades = {
+course_d = {
     "":0,
     "1° básico": 1,
     "2° básico": 2,
@@ -31,9 +31,19 @@ grades = {
     "4° medio": 12,
 }
 
-course_label = st.selectbox("Curso", list(grades.keys()))
-course = grades[course_label]
-subject = st.text_input("Asignatura \n\nModulo en desarrollo, favor escribir asignatura en inglés.")
+course_label = st.selectbox("Curso", list(course_d.keys()))
+course = course_d[course_label]
+
+subject_d = {
+    "":0,
+    "Matemáticas": "Math",
+    "Fisica": "Physics",
+    "Biología": "Biology",
+    "Química": "Chemistry",
+}
+
+subject_label = st.selectbox("Curso", list(subject_d.keys()))
+subject = subject_d[subject_label]
 
 # Subida de archivo
 uploaded_file = st.file_uploader("Subir archivo de Excel", type=["xlsx"])
