@@ -42,7 +42,7 @@ subject_d = {
     "Química": "Chemistry",
 }
 
-subject_label = st.selectbox("Curso", list(subject_d.keys()))
+subject_label = st.selectbox("Asignatura", list(subject_d.keys()))
 subject = subject_d[subject_label]
 
 # Subida de archivo
