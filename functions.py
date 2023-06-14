@@ -5,7 +5,7 @@ from docx import Document
 import datetime as dt
 from dotenv import load_dotenv
 import concurrent.futures
-# import streamlit as st 
+import streamlit as st 
 
 try:
     openai.api_key = st.secrets["OPENAI_API_KEY"]
@@ -34,7 +34,7 @@ def create_docx(dicc, school_name, teacher_name, subject):
 
     # Set the document properties
     document.core_properties.created = fecha
-    document.sections[0].header.paragraphs[0].text = f'{school_name} \t\t{fecha.day}-{fecha.month}-{fecha.year} \nTeacher: {teacher_name}'
+    document.sections[0].header.paragraphs[0].text = f'{school_name} \t\t{fecha.day}-{fecha.month}-{fecha.year} \Profesor: {teacher_name}'
 
     # Add the subtitle
     topics = ", ".join(dicc.keys())
@@ -68,6 +68,8 @@ def generate_guide(excel_file, course, subject, teacher_name, school_name):
     # Read Excel file
     df = pd.read_excel(excel_file)
     df.columns = ['topic', 'number']
+
+    df.topic = translate_topics(df.topic.tolist())
     
     # Initialize a list to store all the questions
     all_questions = {}
@@ -205,3 +207,39 @@ def generate_messages(topic, course, subject):
     }
     messages.append(order_prompt)
     return messages
+
+def translate_topic(topic):
+    # Define the initial system message providing context
+    context = {
+        "role": "system",
+        "content": f"You are a great English-Spanish translator."
+    }
+    messages = [context]
+
+    # Prepare the user message as an order prompt for translating the topic
+    order_prompt = {
+        'role': 'user',
+        'content': f"Translate the following topic to English: {topic}."
+    }
+    messages.append(order_prompt)
+
+    # Call the OpenAI API to generate the response based on the conversation history
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=messages
+    )
+
+    # Extract the generated question from the response and append it to the list
+    topic = response.choices[0].message.content
+    return topic
+
+def translate_topics(list_topics):
+    # Create a ThreadPoolExecutor
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        # Submit the tasks for generating translation
+        results = [executor.submit(translate_topic, topic) for topic in list_topics]
+
+        # Retrieve the generated topics
+        topics = [result.result() for result in concurrent.futures.as_completed(results)]
+
+    return topics
