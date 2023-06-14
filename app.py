@@ -40,6 +40,8 @@ subject_d = {
     "Fisica": "Physics",
     "Biología": "Biology",
     "Química": "Chemistry",
+    "Historia": "History",
+    "Lenguaje": "Spanish",
 }
 
 subject_label = st.selectbox("Asignatura", list(subject_d.keys()))

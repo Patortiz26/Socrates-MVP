@@ -5,7 +5,7 @@ from docx import Document
 import datetime as dt
 from dotenv import load_dotenv
 import concurrent.futures
-import streamlit as st 
+# import streamlit as st 
 
 try:
     openai.api_key = st.secrets["OPENAI_API_KEY"]
@@ -69,7 +69,7 @@ def generate_guide(excel_file, course, subject, teacher_name, school_name):
     df = pd.read_excel(excel_file)
     df.columns = ['topic', 'number']
 
-    df.topic = translate_topics(df.topic.tolist())
+    df.loc[:,'topic_english'] = translate_topics(df.topic.tolist())
     
     # Initialize a list to store all the questions
     all_questions = {}
@@ -77,10 +77,11 @@ def generate_guide(excel_file, course, subject, teacher_name, school_name):
     # Iterate over each row in the dataframe
     for _, row in df.iterrows():
         topic = row['topic']
+        topic_english = row['topic_english']
         num_questions = row['number']
         
         # Generate questions using OpenAI API
-        questions = generate_openai_questions(topic, num_questions, course, subject)
+        questions = generate_openai_questions(topic_english, num_questions, course, subject)
         
         # Append questions to the list
         all_questions[topic] = questions
@@ -236,10 +237,8 @@ def translate_topic(topic):
 def translate_topics(list_topics):
     # Create a ThreadPoolExecutor
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        # Submit the tasks for generating translation
-        results = [executor.submit(translate_topic, topic) for topic in list_topics]
+        # Use map() to submit tasks for generating translation and retrieve the results
+        topics = executor.map(translate_topic, list_topics)
 
-        # Retrieve the generated topics
-        topics = [result.result() for result in concurrent.futures.as_completed(results)]
-
-    return topics
+    # Return the translated topics
+    return list(topics)
